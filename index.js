@@ -95,7 +95,6 @@ function listAuthenicatedUserRepos()
 async function listBranches(owner,repo)
 {
 	let options = getDefaultOptions(`/repos/` + owner + `/` + repo + `/branches/`, "GET");
-	options.body = JSON.stringify({name: owner, repoName: repo});
 
 	// Send a http request to url and specify a callback that will be called upon its return.
 	return new Promise(function(resolve, reject)
@@ -122,7 +121,6 @@ async function createRepo(owner,repo)
 
 			if (response.statusCode == 422){
 				console.log("Repo already exists. ")
-				return;
 			}
 
 			resolve( response.statusCode );

@@ -26,8 +26,8 @@ if (process.env.NODE_ENV != 'test')
 	(async () => {
 		await listAuthenicatedUserRepos();
 		await listBranches(userId, "HW4-345");
-		await createRepo(userId,"Test-Repo");
-		await createIssue(userId, "HW4-345", "Issue-1", "Test issue. ");
+		await createRepo(userId,"test-HW4-345");
+		await createIssue(userId, "HW4-345", "Issue-Test", "This issue is a test");
 		await enableWikiSupport(userId,"HW4-345");
 
 	})()
@@ -94,14 +94,14 @@ function listAuthenicatedUserRepos()
 // 1. Write code for listBranches in a given repo under an owner. See list branches
 async function listBranches(owner,repo)
 {
-	let options = getDefaultOptions(`/repos/` + owner + `/` + repo + `/branches/`, "GET");
+	let options = getDefaultOptions("/repos/" + owner + "/" + repo + "/branches", "GET");
 
 	// Send a http request to url and specify a callback that will be called upon its return.
 	return new Promise(function(resolve, reject)
 	{
 		request(options, function (error, response, body) {
-
-			// console.debug( options );
+			
+			//console.debug( options );
 			resolve( JSON.parse(body) );
 
 		});
@@ -112,17 +112,19 @@ async function listBranches(owner,repo)
 async function createRepo(owner,repo)
 {
 	let options = getDefaultOptions("/user/repos", "POST");
-	options.body = JSON.stringify({name:repo,description: 'test', private: false});
+	options.body = JSON.stringify({name:repo, description: 'test', private: false});
 
 	// Send a http request to url and specify a callback that will be called upon its return.
 	return new Promise(function(resolve, reject)
 	{
 		request(options, function (error, response, body) {
-
+			//console.debug(options);
 			if (response.statusCode == 422){
-				console.log("Repo already exists. ")
+				console.log("Repo already exists. ");
+				let options = getDefaultOptions("/repos/" + owner + "/" + repo, "DELETE");
+				request(options, function (error, response, body) {});
+				console.log("Repo deleted, please re-run the test. ");
 			}
-
 			resolve( response.statusCode );
 
 		});
@@ -133,7 +135,7 @@ async function createRepo(owner,repo)
 async function createIssue(owner,repo, issueName, issueBody)
 {
 	let options = getDefaultOptions("/repos/" + owner + "/" + repo + "/issues", "POST");
-	options.body = JSON.stringify({title:issueName, body:issueBody});
+	options.body = JSON.stringify({title:issueName, body: issueBody});
 
 	// Send a http request to url and specify a callback that will be called upon its return.
 	return new Promise(function(resolve, reject)
@@ -150,13 +152,12 @@ async function createIssue(owner,repo, issueName, issueBody)
 async function enableWikiSupport(owner,repo)
 {
 	let options = getDefaultOptions("/repos/" + owner + "/" + repo, "PATCH");
-	options.body = JSON.stringify({has_wiki:true});
+	options.body = JSON.stringify({has_wiki: true});
 
 	// Send a http request to url and specify a callback that will be called upon its return.
 	return new Promise(function(resolve, reject)
 	{
 		request(options, function (error, response, body) {
-
 			resolve( JSON.parse(body) );
 		});
 	});	

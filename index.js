@@ -97,7 +97,7 @@ async function listBranches(owner,repo)
 	let options = getDefaultOptions("/repos/" + owner + "/" + repo + "/branches", "GET");
 
 	// Send a http request to url and specify a callback that will be called upon its return.
-	return new Promise(function(resolve, reject)
+	return new Promise(function(resolve,)
 	{
 		request(options, function (error, response, body) {
 			
@@ -115,9 +115,9 @@ async function createRepo(owner,repo)
 	options.body = JSON.stringify({name:repo, description: 'test', private: false});
 
 	// Send a http request to url and specify a callback that will be called upon its return.
-	return new Promise(function(resolve, reject)
+	return new Promise(function(resolve,)
 	{
-		request(options, function (error, response, body) {
+		request(options, function (error, response,) {
 			//console.debug(options);
 			if (response.statusCode == 422){
 				console.log("Repo already exists. ");
@@ -138,9 +138,9 @@ async function createIssue(owner,repo, issueName, issueBody)
 	options.body = JSON.stringify({title:issueName, body: issueBody});
 
 	// Send a http request to url and specify a callback that will be called upon its return.
-	return new Promise(function(resolve, reject)
+	return new Promise(function(resolve,)
 	{
-		request(options, function (error, response, body) {
+		request(options, function (error, response,) {
 
 			resolve( response.statusCode );
 
@@ -155,7 +155,7 @@ async function enableWikiSupport(owner,repo)
 	options.body = JSON.stringify({has_wiki: true});
 
 	// Send a http request to url and specify a callback that will be called upon its return.
-	return new Promise(function(resolve, reject)
+	return new Promise(function(resolve,)
 	{
 		request(options, function (error, response, body) {
 			resolve( JSON.parse(body) );
